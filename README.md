@@ -3,7 +3,7 @@
 </p>
 <h1 align="center">AGV</h1>
 
-<img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" height="20"/>  <img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="license"/>  <img src="https://img.shields.io/github/v/release/makaram99/WarehouseAGV" alt="release"/>  <img src="https://img.shields.io/github/last-commit/makaram99/WarehouseAGV" alt="last commit"/> 
+<img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" height="20"/>  <img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="license"/>  <img src="https://img.shields.io/github/v/release/makaram99/agv-sw" alt="release"/>  <img src="https://img.shields.io/github/last-commit/makaram99/agv-sw" alt="last commit"/> 
 
 <p align="center">
   <img src="Documents/External/assets/AGVs.png" alt="AGVs" width="500"/>
