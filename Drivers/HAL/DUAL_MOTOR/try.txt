@@ -1,0 +1,58 @@
+
+void Motors_rotate(MOTORS_DIRECTION_t direction)
+{   
+    u8 positive = 0;
+
+    /* Left motor calculation   */
+    positive = direction * ( MOTORS_FORWARD * (! MOTORS_BACK) * (! MOTORS_RIGHT) * (! MOTORS_LEFT) + 
+              (! MOTORS_FORWARD) * (! MOTORS_BACK) * MOTORS_RIGHT * (! MOTORS_LEFT) )    ;
+
+    digitalWrite(MOTOR_LEFT_POSITIVE, positive);
+    digitalWrite(MOTOR_LEFT_NEGATIVE, ! positive);
+
+    positive =  direction * ( MOTORS_FORWARD * (! MOTORS_BACK) * (! MOTORS_RIGHT) * (! MOTORS_LEFT) + 
+                      (! MOTORS_FORWARD) * (! MOTORS_BACK) * (! MOTORS_RIGHT) * MOTORS_LEFT );
+    digitalWrite(MOTOR_LEFT_POSITIVE, positive);
+    digitalWrite(MOTOR_LEFT_NEGATIVE, ! positive);
+
+    if ((direction == MOTORS_FORWARD) || (direction == MOTORS_BACK))
+    {
+        analogWrite(MOTOR_RIGHT_EN  , MOTORS_START_MODE);
+        analogWrite(MOTOR_LEFT_EN   , MOTORS_START_MODE);
+        _delay_ms(1000);
+    }
+
+    analogWrite(MOTOR_RIGHT_EN  , MOTORS_NORMAL_MODE);
+    analogWrite(MOTOR_LEFT_EN   , MOTORS_NORMAL_MODE);
+
+    Serial.print(1)
+}
+
+/* Joystick */
+    #define JOYSTICK_HORIZONTAL     A0
+    #define JOYSTICK_VERTICAL       A1
+
+    int         highScale   = 850,
+                lowScale    = 500,
+                ignoreScale = 300;
+        
+        if (analogRead(JOYSTICK_HORIZONTAL) > highScale){
+            Motors_rotate(MOTORS_LEFT);
+        }else if (analogRead(JOYSTICK_HORIZONTAL) < ignoreScale){
+            Motors_rotate(MOTORS_STOP);
+        }else if(analogRead(JOYSTICK_HORIZONTAL) < lowScale){
+            Motors_rotate(MOTORS_RIGHT);
+        }else{
+            Motors_rotate(MOTORS_STOP);
+        }
+        
+        if (analogRead(JOYSTICK_VERTICAL) > highScale){
+            Motors_rotate(MOTORS_FORWARD);
+        }else if (analogRead(JOYSTICK_VERTICAL) < ignoreScale){
+            Motors_rotate(MOTORS_STOP);
+        }else if (analogRead(JOYSTICK_VERTICAL) < lowScale){
+            Motors_rotate(MOTORS_BACK);
+        }else{
+            Motors_rotate(MOTORS_STOP);
+        }
+
