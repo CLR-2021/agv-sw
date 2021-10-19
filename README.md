@@ -59,13 +59,13 @@ Platform used: [Arduino Uno <img src="Documents/External/assets/arduino-logo.png
 ***Work***: can be found in folder [SW](SW/)
 
 ### MECHANICAL
-Go to this [repo]().
+Go to this [repo](https://github.com/makaram99/agv-mechanical).
 
 ### ELECTRICAL
-Go to this [repo]().
+Go to this [repo](https://github.com/makaram99/agv-electrical).
 
 ### GUI
-Go to this [repo]().
+Go to this [repo](https://github.com/makaram99/agv-gui).
 
 ---
 ## What is CLR?
