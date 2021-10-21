@@ -17,7 +17,8 @@
  **************************************************************************************
  */
 /**
- * @brief Indixes of IR sensors to stor in array (IR_Values). 
+ * @brief   Indixes of IR sensors to stor in array (IR_Values). 
+ * @note    This is only valid when only 4 sensors are used
  */
 typedef enum{
     EXTRA_LEFT_IR_SENSOR     = 0,

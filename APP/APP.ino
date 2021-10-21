@@ -58,25 +58,23 @@ void simpleTurnAlgorithm(){
     else if ( ! IR_Values[RIGHT_IR_SENSOR])
     {
         /* Turn right until it back to line */
-        while ( ! IR_Values[RIGHT_IR_SENSOR])
-        {
+        do{
             /* Simple turn right by reducing right motor speed to the half of left motor speed  */
             goForward(MOTORS_NORMAL_SPEED, MOTORS_NORMAL_SPEED >> 2);
             
             scanIR_Sensors();
-        }
+        }while ( ! IR_Values[RIGHT_IR_SENSOR]);
     }
 
     /* Otherwise, go left     */
     else{
         /* Turn right by reducing left motor speed to the half of right motor speed */
-        while ( ! IR_Values[LEFT_IR_SENSOR] )
-        {   
+        do{   
             /* Simple turn left by reducing left motor speed to the half of right motor speed  */
             goForward(MOTORS_NORMAL_SPEED >> 2, MOTORS_NORMAL_SPEED);
             
             scanIR_Sensors();
-        }
+        }while ( ! IR_Values[LEFT_IR_SENSOR] );
     }
 }
 

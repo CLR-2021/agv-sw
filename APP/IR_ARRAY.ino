@@ -18,13 +18,6 @@
  */
 u8 * IR_Values = (u8 *) calloc(countIRSensors, sizeof(u8));
 
-/**
- * @brief   Scan values of IR sensors
- * @details Scan values of IR sensors, and if:
- *          1. Sensor = HIGH if ON TRACK.
- *          2. Sensor = LOW if NOT ON TRACK.
- *          Then store these values in the array --> IR_Values[]
- */     
 void scanIR_Sensors(void){
     u8 idx = 0;
 
