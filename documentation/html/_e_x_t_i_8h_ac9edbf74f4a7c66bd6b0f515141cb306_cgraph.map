@@ -1,0 +1,4 @@
+<map id="EXTI_EnableExternalInterrupt" name="EXTI_EnableExternalInterrupt">
+<area shape="rect" id="node1" title="Enable an EXTI pin (EXTI0 &#45; EXTI7)" alt="" coords="5,5,284,37"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="332,5,463,37"/>
+</map>

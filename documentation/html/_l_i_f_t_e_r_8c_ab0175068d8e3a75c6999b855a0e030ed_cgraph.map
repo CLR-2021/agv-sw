@@ -1,0 +1,4 @@
+<map id="LIFTER_Enable" name="LIFTER_Enable">
+<area shape="rect" id="node1" title="Enable the lifter motor." alt="" coords="5,5,167,37"/>
+<area shape="rect" id="node2" href="$_d_i_o_8h.html#aa5beb6dce94cf5e0f46fdd912f17533b" title="write a value on the output pins, options are defined in STD_TYPES.h in the enum STATE_t" alt="" coords="215,5,353,37"/>
+</map>

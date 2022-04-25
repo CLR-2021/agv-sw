@@ -1,0 +1,9 @@
+<map id="GIE_Enable" name="GIE_Enable">
+<area shape="rect" id="node1" title="Global Interrupt Enable (GIE)" alt="" coords="365,167,492,199"/>
+<area shape="rect" id="node2" href="$_s_p_i_8h.html#ace70258f5a37831df39d955548ac9e19" title=" " alt="" coords="63,5,259,37"/>
+<area shape="rect" id="node3" href="$_t_i_m_e_r_8h.html#abcf7cb3f7f90ee395ef9b2bf504dd08d" title=" " alt="" coords="12,62,311,114"/>
+<area shape="rect" id="node4" href="$_t_i_m_e_r_8h.html#a33086b46cfaae0bbb0271b80897dd9ed" title=" " alt="" coords="5,139,317,171"/>
+<area shape="rect" id="node5" href="$_t_i_m_e_r_8h.html#a8c0b82c74d5775d6639dcde3f49a0551" title=" " alt="" coords="9,195,314,227"/>
+<area shape="rect" id="node6" href="$_t_i_m_e_r_8h.html#ae3167decdea68787f29fd940ff88e867" title=" " alt="" coords="12,251,311,303"/>
+<area shape="rect" id="node7" href="$_t_i_m_e_r_8h.html#a723c6d22d40adb0570288ca581299479" title=" " alt="" coords="5,328,317,360"/>
+</map>

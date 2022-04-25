@@ -1,0 +1,819 @@
+/******************************************************************************
+ * @file    main.c
+ * @author  Mahmoud Karam (ma.karam272@gmail.com)
+ * @brief   Auto Guided Vehicle (AGV) control system main file
+ * @version 1.0.0
+ * @date    2022-01-31
+ * @copyright Copyright (c) 2022
+ ******************************************************************************/
+#include <util/delay.h>
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
+#include "GIE.h"
+#include "DIO.h"
+#include "EXTI.h"
+#include "TIMER.h"
+#include "SPI.h"
+#include "UART.h"
+#include "UART_service.h"
+#include "BUTTON.h"
+#include "LED.h"
+#include "IR.h"
+#include "LIFTER.h"
+#include "WHEELS.h"
+#include "BATTERY.h"
+#include "NRF24.h"
+#include "app_cfg.h"
+#include "app.h"
+
+/*----------------------------------------------------------------------------*/
+/*                           Global variables                                 */
+/*----------------------------------------------------------------------------*/
+COLUMN_t        currentColumn   = DEFAULT_COLUMN;
+ROW_t           currentRow      = DEFAULT_ROW;
+ORIENTATION_t   robotOrientaion = EAST;
+ROBOT_STATE_t   robotState      = ROBOT_AVAILABLE;
+u8              newOrderMatchOldOrder = 0;
+ORDER_INFO_t    order;
+
+/*----------------------------------------------------------------------------*/
+/*                           Prototypes                                       */
+/*----------------------------------------------------------------------------*/
+/* TODO: Add prototypes */
+
+
+
+int main(void){
+    NAVIGATION_MODE_t   navigationMode = AUTONOMOUS_MODE;
+
+    order.recievedOrNot = NO_ORDER_RECIEVED;    /* First time iniitaization */
+
+    /* Initialize modules here */
+    DIO_Init();
+    #if 0   /* Uncomment when using EXTI    */
+    EXTI_Init();
+    #endif
+    PWM_Init(PWM_0, 16000U);
+    PWM_Init(PWM_1, 16000U);
+    PWM_Init(PWM_2, 16000U);
+    PWM_Init(PWM_3, 16000U);
+    SPI_Init();
+    UART0_Init();
+    BUTTON_Init();
+    LED_Init();
+    IR_Init();
+    LIFTER_Init();
+    WHEELS_Init();
+    #if 1   /* TESTING  */
+    BATTERY_Init();
+    #endif
+    NRF24_Init();
+
+    LED_TurnOnOff(NEON_LED, LED_ON);
+    
+    sendPosition(DEFAULT_ROW, DEFAULT_COLUMN);
+
+    while (1){  /* Infinite loop */
+        navigationMode = checkAutoOrManualNavigation();
+
+        if (AUTONOMOUS_MODE == navigationMode){
+            monitorBattery();
+            autonomousMode();
+        }else{
+            manualNavigation();
+        }   
+
+        /* Handle any missed conditions */
+        /* Handle cases go out from this loop */
+    }
+    
+    return 0;
+}
+
+/*******************************************************************************
+ * @brief Check if the robot is in autonomous or manual navigation mode. This is 
+ *        done using AUTO/MANUAL button.
+ * @example checkAutoOrManualNavigation() returns AUTONOMOUS_MODE if the AUTO/MANUAL
+ *         button is pressed. Otherwise, it returns MANUAL_MODE.
+ * @return NAVIGATION_MODE_t AUTONOMOUS_MODE or MANUAL_MODE
+ ******************************************************************************/
+NAVIGATION_MODE_t checkAutoOrManualNavigation(void){
+    NAVIGATION_MODE_t navigationMode = AUTONOMOUS_MODE;
+    STATE_t state = LOW;
+
+    state = BUTTON_GetStatus(NAVIGATION_MODE_BUTTON);
+
+    if (HIGH == state){
+        navigationMode = MANUAL_MODE;
+    }
+    
+    return navigationMode;
+}
+
+/*******************************************************************************
+ * @brief This function is used to navigate the robot in autonomous mode.
+ ******************************************************************************/
+void autonomousMode(void){
+    /* Robot available */
+    robotState = ROBOT_AVAILABLE;
+    sendRobotState(robotState);
+
+    if(RECIEVED_ORDER == order.recievedOrNot){
+        handleOrder(order);
+    }else{
+        /* Checking if an error recieved    */
+        order = getOrderInfo();
+        if(ORDER_RECIEVED == order.recievedOrNot){
+            handleOrder(order);
+        } 
+    }   
+}
+
+/*******************************************************************************
+ * @brief This function is used to navigate the robot in manual mode using the
+ *          joystick or the mobile app.
+ ******************************************************************************/
+void manualNavigation(void){
+    /* TODO: implement manual navigation */
+
+}
+
+/*******************************************************************************
+ * @brief This function is used to handle autonomous charging in case the battery
+ *       is low.
+ ******************************************************************************/
+void monitorBattery(void){
+    #if 1   /* TESTING  */
+    /* Check if the battery is low  */
+    if (LOW == BATTERY_GetState()){
+        /* Raise flag to indicate that the robot is charging */
+        robotState = ROBOT_CHARGING;
+        sendRobotState(robotState);
+
+        /* TODO: Check if charging station is available     */
+        /* TODO: if available, navigate to charging station */
+        /* TODO: if not available, wait until available, then Navigating to it   */
+        /*  */
+        navigate(CHARGER_COLUMN, CHARGER_ROW);
+        /* TODO: rise the charging port not available flag  */
+
+        /* Waiting until the battery is charged */
+        while(HIGH != BATTERY_GetState()){
+            /* TODO: Sleep for 5 minutes    */
+            /* TODO: Handle any missed cases    */
+        }
+
+        /* Navigating to the default position */
+        navigate(DEFAULT_COLUMN, DEFAULT_ROW);
+
+        /* TODO: rise the charging port available flag  */
+
+        /* Robot is available again */
+        robotState = ROBOT_AVAILABLE;
+        sendRobotState(robotState);
+    }
+
+    #endif
+}
+
+void handleOrder(ORDER_INFO_t order){
+    ORDER_INFO_t newOrder;  /* the order received after handling the current order  */
+
+    if(ORDER_RECIEVED == order.recievedOrNot){
+        /* Changing state of the robot and order    */
+        robotState = ROBOT_PROCESSING_OEDER;
+        sendRobotState(robotState);
+        order.deliveryState = ORDER_PROCESSING;
+        sendOrderTrackInfo(order.deliveryState);
+
+        /* Navigating to the center row of robots movements */
+        /* ATTENTION: handle the next line if the default column and row numbers changed 
+            or arena track changes  */
+        navigate(DEFAULT_COLUMN, DEFAULT_ROW);
+        
+        /* Navigating to the order position coordinates */
+        navigate(order.column, order.row);
+        LIFTER_MoveUp();
+
+        /* Navigating to the client (controller) position coordinates */
+        order.deliveryState = ORDER_OUT_FOR_DELIVER;
+        sendOrderTrackInfo(order.deliveryState);
+        /* Navigating to the center row of robots movements */
+        /* ATTENTION: handle the next line if the default column and row numbers changed 
+            or arena track changes  */
+        navigate(DEFAULT_COLUMN, DEFAULT_ROW);
+        navigate(CLIENT_COLUMN, CLIENT_ROW);
+        order.deliveryState = ORDER_DELIVERED;
+        sendOrderTrackInfo(order.deliveryState);
+
+        /* Waiting until picking the item from the rack */
+        waitForClientPickup();
+
+        if(0){
+            _delay_ms(1000);    /* To give the computer the time to send the 
+                                   new order coordinates    */
+            newOrder = getOrderInfo();
+
+            if(RECIEVED_ORDER == newOrder.recievedOrNot ){
+                if((newOrder.column == order.column) && (newOrder.row == order.row)){
+                    handleOrder(newOrder);
+                    order.recievedOrNot = NO_ORDER_RECIEVED;
+                }else{
+                    order.recievedOrNot == RECIEVED_ORDER;
+                    order.column = newOrder.column;
+                    order.row = newOrder.row;
+                }
+            }else{
+                order.recievedOrNot = NO_ORDER_RECIEVED;
+            }
+            /* TODO: handle any pending orders with the same previous order:
+            if any client ordered an item that exists on the a shelf that is being
+            processed by a robot, wait until the previous client pick it,
+            then handle pending orders  */
+            /* Get order and if it has the same ID, handleOrder */
+        }else{  /* No pending orders of the same ID */
+            /* Returning the rack to its origin     */
+            order.deliveryState = ORDER_GOING_BACK;
+            sendOrderTrackInfo(order.deliveryState);
+            navigate(order.column, order.row);
+            LIFTER_MoveDown();  
+            order.deliveryState = ORDER_RETURNED;
+            sendOrderTrackInfo(order.deliveryState);
+
+            /* Robot going back to waiting area     */
+            navigate(DEFAULT_COLUMN, DEFAULT_ROW);
+            robotState = ROBOT_AVAILABLE;
+            sendRobotState(robotState);
+        }
+    }
+}
+
+/*******************************************************************************
+ * @brief Get the order information from the master controller.
+ * @return ORDER_INFO_t Information about the order: column, row, recieved or not
+ *        recieved, and the order state.
+ ******************************************************************************/
+ORDER_INFO_t getOrderInfo(void){
+    ORDER_INFO_t order;
+    u8 receivedChar = 0;
+    
+    /* Checking if the order is recieved: Y for yes, N for no */
+    receivedChar = readSerial();
+    if(0 != receivedChar){
+        /* Raise flag to indicate that the order is recieved */
+        order.recievedOrNot = ORDER_RECIEVED;
+        
+        /* Calculating row and column   */
+        order.row = (receivedChar / NUM_OF_COLUMNS);
+        order.column = (receivedChar % NUM_OF_COLUMNS);
+
+        /* TODO: check corner cases for row and column number     */
+    }else{
+        order.recievedOrNot = NO_ORDER_RECIEVED;
+    }
+    
+    return order;
+}
+
+/*******************************************************************************
+ * @brief This function is used to navigate the robot to the specified column 
+ *       and row.
+ * @param column The column number to navigate to. It starts from 0.
+ * @param row The row number to navigate to. It starts from 0.
+ * @par Example: navigate(1,2) will navigate the robot to the second column and
+ *              the third row.
+ ******************************************************************************/
+void navigate(COLUMN_t column, ROW_t row){
+    if(DEFAULT_ROW != currentRow){
+        if(column != currentColumn){     /* Go with wheels on back  */
+            navigateRow(DEFAULT_ROW);
+        }else if(column == currentColumn){ /* Go with wheels on front  */
+            if(row > currentRow){
+                modifyOrientation(SOUTH);
+            }else if(row < currentRow){
+                modifyOrientation(NORTH);
+            }
+            navigateRow(DEFAULT_ROW); 
+        }
+
+    }
+    
+    if(column > currentColumn){
+        modifyOrientation(EAST);
+    }else if(column < currentColumn){
+        modifyOrientation(WEST);
+    }
+    navigateColumn(column);
+    
+    if(row > currentRow){
+        modifyOrientation(SOUTH);
+    }else if(row < currentRow){
+        modifyOrientation(NORTH);
+    }
+    navigateRow(row);  
+}
+
+/*******************************************************************************
+ * @brief This function is used to navigate the robot to the specified column.
+ * @param column The column number to navigate to. It starts from 0.
+ * @par Example: navigate(0) will navigate the robot to the first column.
+ ******************************************************************************/
+void navigateColumn(COLUMN_t column){
+    /* Loop until reaching the required column  */
+    while(currentColumn != column){
+        /* Go forward until on junction */
+        gotoNextJunction();
+
+        /* Updating column coordinates  */
+        if(currentColumn < column){
+            ++currentColumn;
+        }else if(currentColumn > column){
+            currentColumn--;
+        }else{  /* current column = required column   */
+            WHEELS_Coast();
+            break;
+        }
+
+        sendPosition(currentColumn, currentRow);
+    }   /* End column navigation    */
+}
+
+/*******************************************************************************
+ * @brief This function is used to navigate the robot to the specified row.
+ * @param row The row number to navigate to. It starts from 0.
+ * @par Example: navigate(0) will navigate the robot to the first row.
+ ******************************************************************************/
+void navigateRow(const ROW_t row){
+    /* Loop until reaching the required row  */
+    while(currentRow != row){
+        gotoNextJunction();
+
+        /* Updating row coordinates  */
+        if(currentRow < row){
+            ++currentRow;
+        }else if(currentColumn > row){
+            currentRow--;
+        }else{  /* current row = required row   */
+            WHEELS_Coast();
+            break;
+        }
+
+        sendPosition(currentColumn, currentRow);
+    }   /* End row navigation    */
+}
+
+/*******************************************************************************
+ * @brief Modifies the robot orientation to the required orientation
+ * @param column The column number of the required position
+ * @param row The row number of the required position
+ ******************************************************************************/
+void modifyOrientation(const ORIENTATION_t orientation){
+    ORIENTATION_t turnAngle;
+
+    /* TODO: check corner cases of column number    */
+
+    turnAngle = orientation - robotOrientaion;
+    robotOrientaion = orientation;
+
+    if(turnAngle < 0){
+        turnAngle = -turnAngle;
+    }
+
+    if(WHEELS_ON_BACK == WHEELS_GetWheelsPosition()){
+        WHEELS_SetWheelsPosition(WHEELS_ON_FRONT);
+
+        turnAngle += 180;
+    }
+
+    if(turnAngle >= 360){
+        turnAngle -= 360;
+    }
+
+    /***********************************************************************
+     * @brief Turn angle is the angle to rotate the robot with, while:
+     *          * EAST means rotate 90 degree to the right
+     *          * SOUTH means rotate 180 degree to the right
+     *          * WEST means rotate 270 degree to the right
+     *          * NORTH means rotate 0 degree to the right
+     **********************************************************************/
+    if(turnAngle == EAST){
+        while(0B111 == IR_ScanAll()){
+            WHEELS_TurnRight(SHARP_TURN);
+        }
+        
+        while(0B111 != IR_ScanAll()){
+            WHEELS_TurnRight(SHARP_TURN);
+        }
+    }else if(turnAngle == SOUTH){
+        WHEELS_SetWheelsPosition(WHEELS_ON_BACK);
+        robotOrientaion += 180;
+    }else if(turnAngle == WEST){
+        while(0B111 == IR_ScanAll()){
+            WHEELS_TurnLeft(SHARP_TURN);
+        }
+        
+        while(0B111 != IR_ScanAll()){
+            WHEELS_TurnLeft(SHARP_TURN);
+        }
+    }else{  /* current orientation = required orientation   */
+        /* Do nothing   */
+    }
+}
+
+STATE_t onTrack(void){
+    STATE_t retVal = LOW;
+
+    if ( (0B101 == IR_ScanAll()) || (0B111 == IR_ScanAll()) ){
+        retVal = HIGH;
+    }
+
+    return retVal;
+}
+
+STATE_t onLeftSmooth(){
+    STATE_t retVal = LOW;
+
+    if ( 0B011 == IR_ScanAll() ){
+        retVal = HIGH;
+    }
+
+    return retVal;
+}
+
+STATE_t onLeftSharp(){
+    STATE_t retVal = LOW;
+
+    if ( 0B001 == IR_ScanAll() ){
+        retVal = HIGH;
+    }
+
+    return retVal;
+}
+
+STATE_t onRightSmooth(){
+    STATE_t retVal = LOW;
+
+    if ( 0B110 == IR_ScanAll() ){
+        retVal = HIGH;
+    }
+
+    return retVal;
+}
+
+STATE_t onRightSharp(){
+    STATE_t retVal = LOW;
+
+    if ( 0B100 == IR_ScanAll() ){
+        retVal = HIGH;
+    }
+
+    return retVal;
+}
+
+/******************************************************************************
+ * @brief Go to the next junction on the map
+ *****************************************************************************/
+void gotoNextJunction(){
+    /* There are 4 IR sensors on the robot */
+    u8 IR_Value     = 0;    /* Value of the IR sensors */
+    u8 IR_Left      = 0;
+    u8 IR_Right     = 0;
+    u8 IR_Center    = 0;
+
+    /* Skip the current junction: If the robot is on a junction, go forward until being on the line */
+    while(1){
+        IR_Value   = IR_ScanAll();
+        IR_Left    = (IR_Value >> 2) & 1;
+        IR_Center  = (IR_Value >> 1) & 1;
+        IR_Right   = (IR_Value >> 0) & 1;
+
+        /* If the robot is on the junction, then go forward */
+        if( onJunction() ){ /* First junction   */
+            WHEELS_GoForward();
+        }else if ( onTrack() ){     /* Out of Junction */
+            break;
+        }else if ( onLeftSmooth() ){
+            WHEELS_TurnLeft(SMOOTH_TURN);   /* Turn left */
+        }else if ( onLeftSharp() ){
+            WHEELS_TurnLeft(SHARP_TURN);    /* Turn left */
+        }else if ( onRightSmooth() ){
+            WHEELS_TurnRight(SMOOTH_TURN);  /* Turn right */
+        }else if ( onRightSharp() ){
+            WHEELS_TurnRight(SHARP_TURN);   /* Turn right */
+        }
+    }
+    
+    /* Go forward until being on the junction */
+    while(1){
+        IR_Value   = IR_ScanAll();
+        IR_Left    = (IR_Value >> 2) & 1;
+        IR_Center  = (IR_Value >> 1) & 1;
+        IR_Right   = (IR_Value >> 0) & 1;
+
+        /* If the robot is on the junction, then stop */
+        if(onTrack()){
+            /* Apply simple turn algorithm  */
+            WHEELS_GoForward();
+        }else if( onJunction() ){
+            WHEELS_Coast();
+            break;
+        }else if( onLeftSharp() ){
+            WHEELS_TurnLeft(SHARP_TURN);
+        }else if( onRightSharp() ){
+            WHEELS_TurnRight(SHARP_TURN);
+        }else if ( onLeftSmooth() ){
+            WHEELS_TurnLeft(SMOOTH_TURN);  /* Turn left */
+        }else if ( onRightSmooth() ){
+            WHEELS_TurnRight(SMOOTH_TURN);  /* Turn right */
+        }else{
+            /* Do nothing */
+        }
+
+        avoidObstacle();
+    }
+}
+
+/******************************************************************************
+ * @brief This function is used to send the robot position to the master node.
+ * @param column The column number of the robot.
+ * @param row The row number of the robot.
+ *****************************************************************************/
+void sendPosition(const COLUMN_t column, const ROW_t row){
+    u8 stringToSend[2] = {0};
+    stringToSend[0] = 'P';  /* P reoresents position    */
+
+    /* Calculating single character represents column and row on matrix form    */
+    /* @note: row and column starts numbering from 0    */
+    stringToSend[1] = NUM_OF_COLUMNS * (row - 1) + column;
+
+    NRF24_TxMode();
+    NRF24_SendString(stringToSend, sizeof(stringToSend));
+    NRF24_RxMode();
+}
+
+/*******************************************************************************
+ * @brief This function checks if the robot is on a junction or not.
+ * @return BOOL_t TRUE if the robot is on a junction, FALSE otherwise. 
+ ******************************************************************************/
+BOOL_t onJunction(void){
+    BOOL_t state = FALSE;
+
+    if(IR_ScanAll() == 0){
+        state = TRUE;
+    }
+
+    return state;
+}
+
+/*******************************************************************************
+ * @brief This function checks if the robot is on an obstacle or not.
+ * @return BOOL_t TRUE if the robot is on an obstacle, FALSE otherwise.
+ ******************************************************************************/
+BOOL_t onObstacle(void){
+    BOOL_t state = FALSE;
+
+    #if 1   /* TESTING  */
+    if(ULTRASONIC_GetDistance() <= OBSTACLE_DISTANCE_THRESHOLD){
+        state = TRUE;
+    }
+    #endif
+
+    return state;
+}
+
+/*******************************************************************************
+ * @brief Send the robot state to the master node: 
+ *          * ROBOT_CHARGING
+ *          * ROBOT_PROCESSING_OEDER
+ *          * ROBOT_OBSTACLE_AVOIDANCE
+ *          * ROBOT_AVAILABLE
+ ******************************************************************************/
+void sendRobotState(const ROBOT_STATE_t robotState){
+    u8 stringToSend[2] = {0};
+    stringToSend[0] = 'R';  /* R --> Robot    */
+
+
+    switch (robotState){
+        case ROBOT_CHARGING:
+            stringToSend[1] = 'C';  /* C --> Charging   */
+            break;
+        case ROBOT_PROCESSING_OEDER:
+            stringToSend[1] = 'P';  /* P --> Processing   */
+            break;
+        case ROBOT_OBSTACLE_AVOIDANCE:
+            stringToSend[1] = 'O';  /* O --> Obstacle   */
+            break;
+        case ROBOT_AVAILABLE:
+            stringToSend[1] = 'A';  /* A --> Available   */
+            break;
+        default:
+            break;
+    }
+
+    NRF24_TxMode();
+    NRF24_SendString(stringToSend, sizeof(stringToSend));
+    NRF24_RxMode();
+}
+
+/*******************************************************************************
+ * @brief Send the state of the order to the master node.
+ * @param orderTrackInfo The state of the order: 
+ *          * ORDER_PROCESSING
+ *          * ORDER_OUT_FOR_DELIVER
+ *          * ORDER_DELIVERED
+ *          * ORDER_GOING_BACK
+ *          * ORDER_RETURNED
+ *          * ORDER_CANCELLED
+ * @par Example: sendOrderTrackInfo(ORDER_AVAILABLE) will send the order state to 
+ *      the master node.
+ ******************************************************************************/
+void sendOrderTrackInfo(const ORDER_TRACKING_t orderTrackInfo){
+    u8 stringToSend[2] = {0};
+    stringToSend[0] = 'T';  /* T --> Tracking    */
+
+
+    switch (orderTrackInfo){
+        case ORDER_PROCESSING:
+            stringToSend[1] = 'P';  /* P --> Processing   */
+            break;
+        case ORDER_OUT_FOR_DELIVER:
+            stringToSend[1] = 'O';  /* Out for delivery   */
+            break;
+        case ORDER_DELIVERED:
+            stringToSend[1] = 'D';  /* D --> Delivery   */
+            break;
+        case ORDER_GOING_BACK:
+            stringToSend[1] = 'B';  /* B --> Back   */
+            break;
+        case ORDER_RETURNED:
+            stringToSend[1] = 'R';  /* R --> Returned   */
+            break;
+        default:
+            break;
+    }
+
+    NRF24_TxMode();
+    NRF24_SendString(stringToSend, sizeof(stringToSend));
+    NRF24_RxMode();
+}
+
+/*******************************************************************************
+ * @brief Check if the client picked up the item or not from the rack. 
+ * @return CLIENT_PICKUP_t CLIENT_PICKUP_YES if the client picked up the item, 
+ *         CLIENT_PICKUP_NO otherwise.
+ ******************************************************************************/
+void waitForClientPickup(void){
+    while(1){
+        if(HIGH == BUTTON_GetStatus(ITEM_PICKUP_BUTTON)){
+            break;
+        }else if(HIGH == MASTER_PickItem()){
+            break;
+        }
+
+        _delay_ms(10);
+    }
+}
+
+/*******************************************************************************
+ * @brief Check if the client pressed the item pickup button on the GUI
+ * @return STATE_t HIGH if the client pressed the item pickup button, LOW otherwise.
+ ******************************************************************************/
+STATE_t MASTER_PickItem(void){
+    /* TODO: Check if the client pressed the item pickup button    */
+    /* TODO: TEST ignore    */
+    STATE_t retVal = LOW;
+    u8 data = 0;
+
+    NRF24_RxMode();
+
+    if(NRF24_IsDataReady()){
+        NRF24_ReceiveString(&data, sizeof(data));
+        if(data){
+            retVal = HIGH;
+        }
+    }
+    
+    return retVal;
+}
+
+/*******************************************************************************
+ * @brief Read the serial buffer received from the master node.
+ * @return u8 The serial buffer received from the master node.
+ ******************************************************************************/
+u8 readSerial(void){
+    u8 receivedChar = 0;
+
+    NRF24_RxMode();
+    if(NRF24_IsDataReady()){
+        NRF24_ReceiveString(&receivedChar, 1);
+    }else{
+        receivedChar = 0;
+    }
+
+    return receivedChar;
+}
+
+void avoidObstacle(void){
+    ROBOT_STATE_t originalRobotState = robotState;
+    STATE_t obstacleFlag = LOW;
+
+    while(onObstacle()){
+        if(LOW == obstacleFlag){
+            WHEELS_Coast();
+            obstacleFlag = HIGH;
+            robotState = ROBOT_OBSTACLE_AVOIDANCE;
+            sendRobotState(robotState);
+        }
+    }
+
+    if(HIGH == obstacleFlag){
+        obstacleFlag = LOW;
+        robotState = originalRobotState;
+        sendRobotState(robotState);
+    }
+}
+
+#if 0
+void simpleTurnAlgorithm(){
+    u8 IR_Value   = IR_ScanAll();
+    u8 IR_Left    = (IR_Value >> 2) & 1;
+    u8 IR_Center  = (IR_Value >> 1) & 1;
+    u8 IR_Right   = (IR_Value >> 0) & 1;
+
+    /* Check to go forward */
+    if (onTrack()){
+        WHEELS_GoForward();
+    }
+
+    /* Check to go right    */
+    else if ( ! IR_Center)
+    {
+        /* Turn right until it back to line */
+        do{
+            /* Simple turn right by reducing right motor speed to the half of left motor speed  */
+            WHEELS_TurnRight(SMOOTH_TURN);
+            
+            IR_Value = IR_ScanAll();
+            IR_Center = (IR_Value >> 1) & 1;
+        }while ( ! IR_Center);
+    }
+
+    /* Otherwise, go left     */
+    else{
+        /* Turn right by reducing left motor speed to the half of right motor speed */
+        do{   
+            /* Simple turn left by reducing left motor speed to the half of right motor speed  */
+            WHEELS_TurnLeft(SMOOTH_TURN);
+            
+            IR_Value = IR_ScanAll();
+            IR_Left  = (IR_Value >> 2) & 1;
+        }while ( ! IR_Left );
+    }
+}
+
+void sharpTurnAlgorithm(){ 
+    u8 IR_Value        = IR_ScanAll();
+    u8 IR_Left    = (IR_Value >> 3) & 1;
+    u8 IR_Left         = (IR_Value >> 2) & 1;
+    u8 IR_Center        = (IR_Value >> 1) & 1;
+    u8 IR_Right   = (IR_Value >> 0) & 1;
+
+    /* Check to turn right: IR_Right on track  */
+    if ( LOW == IR_Right ){
+        
+        /* Rotate until the sensor returns out of track */
+        do {
+            /* Sharp turn right by rotating right motor backward and left motor forward */
+            WHEELS_TurnRight(SHARP_TURN);
+            
+            IR_Value = IR_ScanAll();
+            IR_Right  = (IR_Value >> 0) & 1;
+
+            /* Check if junction detected   */
+            if( onJunction() ){
+                break;
+            }
+
+        }while ( IR_Right );
+    }
+
+    /* Check to turn left: IR_Left on track    */
+    else if ( LOW == IR_Left )
+    {   
+        /* Rotate until the sensor returns out of track */
+        do {
+            WHEELS_TurnLeft(SHARP_TURN);
+            
+            IR_Value = IR_ScanAll();
+            IR_Left    = (IR_Value >> 3) & 1;
+
+            /* Check if junction detected   */
+            if( onJunction() ){
+                break;
+            }
+
+        }while ( IR_Left );
+    }
+}
+
+#endif

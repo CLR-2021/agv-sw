@@ -1,0 +1,5 @@
+<map id="TIMER0_EnableCompareMatchInterrupt" name="TIMER0_EnableCompareMatchInterrupt">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,304,75"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#a388456f158428f6a9d962cb5ff715501" title="Global Interrupt Enable (GIE)" alt="" coords="434,5,561,37"/>
+<area shape="rect" id="node3" href="$_t_i_m_e_r_8c.html#a7df5b1a423893790dd41b15bc1b1a6bc" title=" " alt="" coords="352,61,643,93"/>
+</map>

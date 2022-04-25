@@ -1,0 +1,4 @@
+<map id="UART0_ReceiveByte" name="UART0_ReceiveByte">
+<area shape="rect" id="node1" title="Receive a byte using UART module 0." alt="" coords="117,5,324,37"/>
+<area shape="rect" id="node2" href="$app_test_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title=" " alt="" coords="5,5,69,37"/>
+</map>

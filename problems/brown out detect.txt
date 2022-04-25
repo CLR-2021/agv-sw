@@ -1,0 +1,1 @@
+https://electronics.stackexchange.com/questions/402349/why-is-this-microcontroller-brown-out-level-detection-at-2-6v-and-3-4v#:~:text=so%20you'd%20want%20brown,make%20brown%20out%20threshold%20higher.

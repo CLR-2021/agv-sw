@@ -1,0 +1,6 @@
+<map id="SPI_EnableInterrupt" name="SPI_EnableInterrupt">
+<area shape="rect" id="node1" title=" " alt="" coords="5,61,201,93"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="269,5,400,37"/>
+<area shape="rect" id="node3" href="$_g_i_e_8h.html#a388456f158428f6a9d962cb5ff715501" title="Global Interrupt Enable (GIE)" alt="" coords="271,61,398,93"/>
+<area shape="rect" id="node4" href="$_s_p_i_8c.html#a86877cc446f9d23452cd6d00de6fb459" title=" " alt="" coords="249,117,420,149"/>
+</map>

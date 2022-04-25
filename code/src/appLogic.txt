@@ -1,0 +1,67 @@
+/* Startup mode */
+if(Auto mode)
+    Send position to master
+    Check battery state
+        if low
+            robot state = charging --> busy
+            Auto charging
+        else
+            robot state = available
+            wait until recieve a location from master
+                robot state = processing order
+                rack position = not picked yet
+                navigate column (distination column)
+
+/* navigate column   */
+initial state --> sensors on track, position (1, 0) --> (ROW, COL)
+Read IR Array
+go forward until on track (because initial state on junction)
+line follower until junction
+increment column by 1
+if (current column) = (distination column)
+    navigate row (distination row)
+else
+    repeat navigate column until reach the distination column
+
+/* navigate row    */
+if (current row) > (distination row)
+    turn right
+    go forward until junction
+    increment row by 1
+    lifter up
+    go by back until junction
+    decrement row by 1
+    turn right
+else
+    turn left
+    go forward until junction
+    decrement row by 1
+    lifter up
+    go by back until junction
+    increment row by 1
+    turn left
+
+rack position = Out for delivery
+
+/* Going to client  */
+navigate column (client column --> 0)
+navigate row (client row --> 0)
+rack position = delivered
+wait until pressing button (item is taken from the rack)
+go by back until junction 
+turn right
+
+rack position = On the way back
+
+/* Returning the rack   */
+navigate column (distination column)
+navigate row (distination row)
+lifter down
+rack position = rack returned
+go by back until junction
+turn left or right based on current state
+navigate column (waiting column --> 0)
+navigate row (waiting row --> 1)
+robot state = available
+
+repeat the whole process again

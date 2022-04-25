@@ -1,0 +1,7 @@
+<map id="WHEELS_Init" name="WHEELS_Init">
+<area shape="rect" id="node1" title="Initialize the wheels module." alt="" coords="5,61,145,93"/>
+<area shape="rect" id="node2" href="$_t_i_m_e_r_8h.html#abcbf96f0c1b9f36393b7934baf38a0a7" title=" " alt="" coords="280,33,385,65"/>
+<area shape="rect" id="node5" href="$_w_h_e_e_l_s_8c.html#a9bbde23e5bc40a769d57bd026da3b4a4" title="Set the position of the wheels: on the front or on the back." alt="" coords="193,89,472,121"/>
+<area shape="rect" id="node3" href="$_t_i_m_e_r_8c.html#a8257d97048d8a0b0d912136ffb935aa1" title=" " alt="" coords="520,5,649,37"/>
+<area shape="rect" id="node4" href="$_t_i_m_e_r_8c.html#a16c2e0bcfaf6276ada1336f2e0e8f126" title=" " alt="" coords="520,61,649,93"/>
+</map>

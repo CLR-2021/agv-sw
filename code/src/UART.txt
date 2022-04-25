@@ -1,0 +1,755 @@
+/**************************************************************************
+ * @file    UART.c
+ * @author  Mahmoud Karam (ma.karam272@gmail.com)
+ * @brief   UART driver for ATMEGA128 microcontroller
+ * @version 1.0.0
+ * @date    2022-03-03
+ * @copyright Copyright (c) 2022
+ **************************************************************************/
+
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
+#include "UART_reg.h"
+#include "GIE.h"
+#include "UART.h"
+#include "UART_cfg.h"
+
+/*----------------------------------------------------------------------*/
+/*                        CALLBACK FUNCTIONS                            */
+/*----------------------------------------------------------------------*/
+void (* UART0_RX_Callback)(void)   = NULL;     /*!< Pointer to the RX callback function of UART0 */
+void (* UART1_RX_Callback)(void)   = NULL;     /*!< Pointer to the RX callback function of UART1 */
+void (* UART0_TX_Callback)(void)   = NULL;     /*!< Pointer to the TX callback function of UART0 */
+void (* UART1_TX_Callback)(void)   = NULL;     /*!< Pointer to the TX callback function of UART1 */
+void (* UART0_UDRE_Callback)(void) = NULL;     /*!< Pointer to the UDRE callback function of UART0 */
+void (* UART1_UDRE_Callback)(void) = NULL;     /*!< Pointer to the UDRE callback function of UART1 */
+
+/*----------------------------------------------------------------------*/
+/*                          ISR FUNCTIONS                               */
+/*----------------------------------------------------------------------*/
+/* UART0_RX_ISR */
+void __vector_18(void) __attribute__((signal));
+void __vector_18(void) {
+    GIE_Disable();
+
+    if(NULL != UART0_RX_Callback) {
+        UART0_RX_Callback();
+    }
+
+    /* Clear the RXC flag */
+    SET_BIT(UCSR0A, RXC);
+
+    GIE_Enable();
+}
+
+/* UART0_TX_ISR */
+void __vector_20(void) __attribute__((signal));
+void __vector_20(void) {
+    GIE_Disable();
+
+    if(UART0_TX_Callback != NULL) {
+        UART0_TX_Callback();
+    }
+
+    /* Clear the TXC flag */
+    SET_BIT(UCSR0A, TXC);
+
+    GIE_Enable();
+}
+
+/* UART0_UDRE_ISR */
+void __vector_19(void) __attribute__((signal));
+void __vector_19(void) {
+    GIE_Disable();
+
+    if(UART0_UDRE_Callback != NULL) {
+        UART0_UDRE_Callback();
+    }
+
+    /* Clear the UDRE flag */
+    CLR_BIT(UCSR0A, UDRE);
+
+    GIE_Enable();
+}
+
+/* UART1_RX_ISR */
+void __vector_30(void) __attribute__((signal));
+void __vector_30(void) {
+    GIE_Disable();
+
+    if(NULL != UART1_RX_Callback) {
+        UART1_RX_Callback();
+    }
+
+    /* Clear the RXC flag */
+    SET_BIT(UCSR1A, RXC);
+
+    GIE_Enable();
+}
+
+/* UART1_TX_ISR */
+void __vector_32(void) __attribute__((signal));
+void __vector_32(void) {
+    GIE_Disable();
+
+    if(UART1_TX_Callback != NULL) {
+        UART1_TX_Callback();
+    }
+
+    /* Clear the TXC flag */
+    SET_BIT(UCSR1A, TXC);
+
+    GIE_Enable();
+}
+
+/* UART1_UDRE_ISR */
+void __vector_31(void) __attribute__((signal));
+void __vector_31(void) {
+    GIE_Disable();
+
+    if(UART1_UDRE_Callback != NULL) {
+        UART1_UDRE_Callback();
+    }
+
+    /* Clear the UDRE flag */
+    CLR_BIT(UCSR1A, UDRE);
+
+    GIE_Enable();
+}
+
+/*--------------------------------------------------------------------*/
+/*                 UART PRIVATE FUNCTIONS PROTOTYPES                 */
+/*--------------------------------------------------------------------*/
+static void UART0_SetBaudRate(const u32 baudRate) {
+    u16 ubbrValue = 0;
+
+    /* Calculate UBRR value */
+    switch (UART0_Configs.mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)16 * baudRate) ) - 1);
+            break;
+        case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)8 * baudRate) ) - 1);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)2 * baudRate) ) - 1);
+            break;
+        default:
+            break;
+    }
+            
+    /* Set UBRR value. UBRRH must be written before UBRRL */
+    UBRR0H = (u8)(ubbrValue >> 8);
+    UBRR0L = (u8)ubbrValue;
+}
+
+static void UART1_SetBaudRate(const u32 baudRate) {
+    u16 ubbrValue = 0;
+
+    /* Calculate UBRR value */
+    switch (UART1_Configs.mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)16 * baudRate) ) - 1);
+            break;
+        case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)8 * baudRate) ) - 1);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER:
+            ubbrValue = (u16)( ( ( (u32)F_CPU ) / ((u32)2 * baudRate) ) - 1);
+            break;
+        default:
+            break;
+    }
+            
+    /* Set UBRR value. UBRRH must be written before UBRRL */
+    UBRR1H = (u8)(ubbrValue >> 8);
+    UBRR1L = (u8)ubbrValue;
+}
+
+static void UART0_SetDataBits(const UART_DATA_BITS_t dataBits) {
+    switch (dataBits) {
+        case UART_DATA_5_BITS:
+            CLR_BIT(UCSR0C, UCSZ0);
+            CLR_BIT(UCSR0C, UCSZ1);
+            CLR_BIT(UCSR0B, UCSZ2);
+            break;
+        case UART_DATA_6_BITS:
+            SET_BIT(UCSR0C, UCSZ0);
+            CLR_BIT(UCSR0C, UCSZ1);
+            CLR_BIT(UCSR0B, UCSZ2);
+            break;
+        case UART_DATA_7_BITS:
+            CLR_BIT(UCSR0C, UCSZ0);
+            SET_BIT(UCSR0C, UCSZ1);
+            CLR_BIT(UCSR0B, UCSZ2);
+            break;
+        case UART_DATA_8_BITS:
+            SET_BIT(UCSR0C, UCSZ0);
+            SET_BIT(UCSR0C, UCSZ1);
+            CLR_BIT(UCSR0B, UCSZ2);
+            break;
+        case UART_DATA_9_BITS:
+            SET_BIT(UCSR0C, UCSZ0);
+            SET_BIT(UCSR0C, UCSZ1);
+            SET_BIT(UCSR0B, UCSZ2);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART1_SetDataBits(const UART_DATA_BITS_t dataBits) {
+    switch (dataBits) {
+        case UART_DATA_5_BITS:
+            CLR_BIT(UCSR1C, UCSZ0);
+            CLR_BIT(UCSR1C, UCSZ1);
+            CLR_BIT(UCSR1B, UCSZ2);
+            break;
+        case UART_DATA_6_BITS:
+            SET_BIT(UCSR1C, UCSZ0);
+            CLR_BIT(UCSR1C, UCSZ1);
+            CLR_BIT(UCSR1B, UCSZ2);
+            break;
+        case UART_DATA_7_BITS:
+            CLR_BIT(UCSR1C, UCSZ0);
+            SET_BIT(UCSR1C, UCSZ1);
+            CLR_BIT(UCSR1B, UCSZ2);
+            break;
+        case UART_DATA_8_BITS:
+            SET_BIT(UCSR1C, UCSZ0);
+            SET_BIT(UCSR1C, UCSZ1);
+            CLR_BIT(UCSR1B, UCSZ2);
+            break;
+        case UART_DATA_9_BITS:
+            SET_BIT(UCSR1C, UCSZ0);
+            SET_BIT(UCSR1C, UCSZ1);
+            SET_BIT(UCSR1B, UCSZ2);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART0_SetParity(const UART_PARITY_t parity) {
+    switch (parity) {
+        case UART_PARITY_DISABLE:
+            CLR_BIT(UCSR0C, UPM0);
+            CLR_BIT(UCSR0C, UPM1);
+            break;
+        case UART_PARITY_EVEN:
+            CLR_BIT(UCSR0C, UPM0);
+            SET_BIT(UCSR0C, UPM1);
+            break;
+        case UART_PARITY_ODD:
+            SET_BIT(UCSR0C, UPM0);
+            SET_BIT(UCSR0C, UPM1);
+            break;
+        default:
+            /* DEBUGGING */
+            break;
+    }
+}
+
+static void UART1_SetParity(const UART_PARITY_t parity) {
+    switch (parity) {
+        case UART_PARITY_DISABLE:
+            CLR_BIT(UCSR1C, UPM0);
+            CLR_BIT(UCSR1C, UPM1);
+            break;
+        case UART_PARITY_EVEN:
+            CLR_BIT(UCSR1C, UPM0);
+            SET_BIT(UCSR1C, UPM1);
+            break;
+        case UART_PARITY_ODD:
+            SET_BIT(UCSR1C, UPM0);
+            SET_BIT(UCSR1C, UPM1);
+            break;
+        default:
+            /* DEBUGGING */
+            break;
+    }
+}
+
+static void UART0_SetStopBits(const UART_STOP_BITS_t stopBits) {
+    switch (stopBits) {
+        case UART_STOP_1_BIT:
+            CLR_BIT(UCSR0C, USBS);
+            break;
+        case UART_STOP_2_BIT:
+            SET_BIT(UCSR0C, USBS);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART1_SetStopBits(const UART_STOP_BITS_t stopBits) {
+    switch (stopBits) {
+        case UART_STOP_1_BIT:
+            CLR_BIT(UCSR1C, USBS);
+            break;
+        case UART_STOP_2_BIT:
+            SET_BIT(UCSR1C, USBS);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART0_SetMode(const UART_MODE_t mode) {
+    switch (mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL: case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            CLR_BIT(UCSR0B, UMSEL);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER: case UART_MODE_SYNCHRONOUS_SLAVE:
+            SET_BIT(UCSR0B, UMSEL);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART1_SetMode(const UART_MODE_t mode) {
+    switch (mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL: case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            CLR_BIT(UCSR1B, UMSEL);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER: case UART_MODE_SYNCHRONOUS_SLAVE:
+            SET_BIT(UCSR1B, UMSEL);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART0_SetClockPolarity(const UART_CLOCK_POLARITY_t polarity) {
+    switch (UART0_Configs.mode ) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL: case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            CLR_BIT(UCSR0C, UCPOL);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER: case UART_MODE_SYNCHRONOUS_SLAVE:
+            switch (polarity) {
+                case UART_RISING_EDGE_CLOCK:
+                    CLR_BIT(UCSR0B, UCPOL);
+                    break;
+                case UART_FALLING_EDGE_CLOCK:
+                    SET_BIT(UCSR0B, UCPOL);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART1_SetClockPolarity(const UART_CLOCK_POLARITY_t polarity) {
+    switch (UART1_Configs.mode ) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL: case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            CLR_BIT(UCSR1C, UCPOL);
+            break;
+        case UART_MODE_SYNCHRONOUS_MASTER: case UART_MODE_SYNCHRONOUS_SLAVE:
+            switch (polarity) {
+                case UART_RISING_EDGE_CLOCK:
+                    CLR_BIT(UCSR1B, UCPOL);
+                    break;
+                case UART_FALLING_EDGE_CLOCK:
+                    SET_BIT(UCSR1B, UCPOL);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+
+}
+
+static void UART0_SetSpeed(const UART_MODE_t mode) {
+    switch (mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL:
+            CLR_BIT(UCSR0B, U2X);
+            break;
+        case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            SET_BIT(UCSR0B, U2X);
+            break;
+        default:
+            break;
+    }
+}
+
+static void UART1_SetSpeed(const UART_MODE_t mode) {
+    switch (mode) {
+        case UART_MODE_ASYNCHRONOUS_NORMAL:
+            CLR_BIT(UCSR1B, U2X);
+            break;
+        case UART_MODE_ASYNCHRONOUS_DOUBLE_SPEED:
+            SET_BIT(UCSR1B, U2X);
+            break;
+        default:
+            break;
+    }
+}
+/*--------------------------------------------------------------------*/
+/*                 UART PUBLIC FUNCTIONS PROTOTYPES                 */
+/*--------------------------------------------------------------------*/
+
+void UART0_Init(void) {
+        /* Set baud rate */
+         UART0_SetBaudRate(UART0_Configs.baud_rate);
+
+        /* Set data bits: 5, 6, 7, 8 or 9 */
+         UART0_SetDataBits(UART0_Configs.data_bits);
+
+        /* Set parity: even, odd, disable */
+         UART0_SetParity(UART0_Configs.parity);
+
+        /* Set stop bits: 1 or 2 */
+         UART0_SetStopBits(UART0_Configs.stop_bits);
+
+        /* Set mode: asynchronous or synchronous */
+         UART0_SetMode(UART0_Configs.mode);
+
+        /* Set clock polarity: rising or falling */
+         UART0_SetClockPolarity(UART0_Configs.clock_polarity);
+
+        /* Set speed: normal or double speed */
+         UART0_SetSpeed(UART0_Configs.mode);
+
+        /* Enable UART */
+        UART0_Enable();
+}
+
+void UART1_Init(void) {
+        /* Set baud rate */
+        UART1_SetBaudRate(UART1_Configs.baud_rate);
+
+        /* Set data bits: 5, 6, 7, 8 or 9 */
+        UART1_SetDataBits(UART1_Configs.data_bits);
+
+        /* Set parity: even, odd, disable */
+        UART1_SetParity(UART1_Configs.parity);
+
+        /* Set stop bits: 1 or 2 */
+        UART1_SetStopBits(UART1_Configs.stop_bits);
+
+        /* Set mode: asynchronous or synchronous */
+        UART1_SetMode(UART1_Configs.mode);
+
+        /* Set clock polarity: rising or falling */
+        UART1_SetClockPolarity(UART1_Configs.clock_polarity);
+
+        /* Set speed: normal or double speed */
+        UART1_SetSpeed(UART1_Configs.mode);
+
+        /* Enable UART */
+        UART1_Enable();
+}
+
+void UART0_Enable(void) {
+    SET_BIT(UCSR0B, RXEN);     /* Enable receiver */
+    SET_BIT(UCSR0B, TXEN);     /* Enable transmitter */
+}
+
+void UART1_Enable(void) {
+    SET_BIT(UCSR1B, RXEN);     /* Enable receiver */
+    SET_BIT(UCSR1B, TXEN);     /* Enable transmitter */    
+}
+
+void UART0_Disable(void) {
+    CLR_BIT(UCSR0B, RXEN);     /* Enable receiver */
+    CLR_BIT(UCSR0B, TXEN);     /* Enable transmitter */
+}
+
+void UART1_Disable(void) {
+    CLR_BIT(UCSR1B, RXEN);     /* Enable receiver */
+    CLR_BIT(UCSR1B, TXEN);     /* Enable transmitter */
+}
+
+void UART0_SendByte(const u8 data) {
+    /* Wait for empty transmit buffer: Polling */
+    while(BIT_IS_CLEAR(UCSR0A, UDRE) )
+        ;
+
+    /* Put data into buffer, sends the data */
+    UDR0 = data;
+}
+
+void UART1_SendByte(const u8 data) {
+    /* Wait for empty transmit buffer: Polling */
+    while(BIT_IS_CLEAR(UCSR1A, UDRE) )
+        ;
+
+    /* Put data into buffer, sends the data */
+    UDR1 = data;
+}
+
+void UART0_Send9BitData(const u16 data) {
+    /* Wait for empty transmit buffer: Polling */
+    while(BIT_IS_CLEAR(UCSR0A, UDRE) );
+
+    /* Put 9th bit into buffer: Must be written before the data register */
+    if(data & 0x0100) {     /* If 9th bit is 1 */
+        SET_BIT(UCSR0B, TXB8);
+    }else {
+        CLR_BIT(UCSR0B, TXB8);
+    }
+
+    /* Put data into buffer, sends the data */
+    UDR0 = (u8)(data & 0x00FF);
+}
+
+void UART1_Send9BitData(const u16 data) {
+    /* Wait for empty transmit buffer: Polling */
+    while(BIT_IS_CLEAR(UCSR1A, UDRE) );
+
+    /* Put 9th bit into buffer: Must be written before the data register */
+    if(data & 0x0100) {     /* If 9th bit is 1 */
+        SET_BIT(UCSR1B, TXB8);
+    }else {
+        CLR_BIT(UCSR1B, TXB8);
+    }
+
+    /* Put data into buffer, sends the data */
+    UDR1 = (u8)(data & 0x00FF);
+}
+
+STATE_t UART0_Available(void) {
+    STATE_t state = LOW;
+
+    /* Check if data is available in receive buffer */
+    if(BIT_IS_SET(UCSR0A, RXC)) {
+        state = HIGH;
+    }else {
+        state = LOW;
+    }
+
+    return state;
+}
+
+STATE_t UART1_Available(void) {
+    STATE_t state = LOW;
+
+    /* Check if data is available in receive buffer */
+    if(BIT_IS_SET(UCSR1A, RXC)) {
+        state = HIGH;
+    }else {
+        state = LOW;
+    }
+
+    return state;
+}
+
+ERROR_STATUS_t UART0_ReceiveByte(u8 * const data) {
+    ERROR_STATUS_t errorStatus = ERROR_NO;
+                    
+    /* Wait for data to be received */
+    while( BIT_IS_CLEAR(UCSR0A, RXC) ) 
+        ;
+
+    /* Check for errors. Must be checked before reading the data register */
+    if( BIT_IS_SET(UCSR0A, FE) || BIT_IS_SET(UCSR0A, DOR) || BIT_IS_SET(UCSR0A, UPE)) {
+        errorStatus = ERROR_YES;
+    }else {
+        errorStatus = ERROR_NO;
+    }
+
+    /* Get data from buffer */
+    *data = UDR0;
+    /* Reading data register clears the receive complete flag. So, no need to clear it again */
+
+    return errorStatus;
+}
+
+ERROR_STATUS_t UART1_ReceiveByte(u8 * const data) {
+    ERROR_STATUS_t errorStatus = ERROR_NO;
+    u16 timer = 0;
+    
+    /* Wait for data to be received */
+    while(BIT_IS_CLEAR(UCSR1A, RXC) ) {
+        /* Check for timeout */
+        if(timer > UART_TIMEOUT_CYCLE_COUNT) {
+            errorStatus = ERROR_TIMEOUT;
+            break;
+        }
+
+        ++timer;
+    }
+
+    /* Check for errors. Must be checked before reading the data register */
+    if( BIT_IS_SET(UCSR1A, FE) || BIT_IS_SET(UCSR1A, DOR) || BIT_IS_SET(UCSR1A, UPE)) {
+        errorStatus = ERROR_YES;
+    }else {
+        errorStatus = ERROR_NO;
+    }
+
+    /* Get data from buffer */
+    *data = UDR1;
+    /* Read data register clears the receive complete flag. So, no need to clear it again */
+
+    return errorStatus;
+}
+
+ERROR_STATUS_t UART0_Receive9BitData(u16 * const data) {
+    ERROR_STATUS_t errorStatus = ERROR_NO;
+
+    /* Wait for data to be received */
+    while(BIT_IS_CLEAR(UCSR0A, RXC) )
+        ;
+
+    /* Check for errors. Must be checked before reading the data register */
+    if( BIT_IS_SET(UCSR0A, FE) || BIT_IS_SET(UCSR0A, DOR) || BIT_IS_SET(UCSR0A, UPE)) {
+        errorStatus = ERROR_YES;
+    }else {
+        errorStatus = ERROR_NO;
+    }
+
+    /* Get 9th bit from buffer */
+    if(BIT_IS_SET(UCSR0B, RXB8)) {
+        *data = (u16)(UDR0) | 0x0100;   /* Must be read before the data register */
+    }else {
+        *data = (u16)(UDR0);
+    }
+
+    return errorStatus;
+}
+
+ERROR_STATUS_t UART1_Receive9BitData(u16 * const data) {
+    ERROR_STATUS_t errorStatus = ERROR_NO;
+
+    /* Wait for data to be received */
+    while(BIT_IS_CLEAR(UCSR1A, RXC) )
+        ;
+
+    /* Check for errors. Must be checked before reading the data register */
+    if( BIT_IS_SET(UCSR1A, FE) || BIT_IS_SET(UCSR1A, DOR) || BIT_IS_SET(UCSR1A, UPE)) {
+        errorStatus = ERROR_YES;
+    }else {
+        errorStatus = ERROR_NO;
+    }
+
+    /* Get 9th bit from buffer */
+    if(BIT_IS_SET(UCSR1B, RXB8)) {
+        *data = (u16)(UDR1) | 0x0100;   /* Must be read before the data register */
+    }else {
+        *data = (u16)(UDR1);
+    }
+
+    return errorStatus;
+}
+
+/********************************************************************************
+ * @brief The receiver buffer FIFO will be flushed when the receiver is disabled, 
+ *          i.e. the buffer will be emptied of its contents. 
+ *        Unread data will be lost. If the buffer has to be flushed during normal 
+ *          operation, due to for instance an error condition, 
+ *          read the UDR I/O location until the RXC flag is cleared. 
+ *******************************************************************************/
+void UART0_Flush(void) {
+    u8 dummy;
+                    
+    while(BIT_IS_SET(UCSR0A, RXC) ) {
+        UART0_ReceiveByte(&dummy);
+    }
+}
+
+void UART1_Flush(void) {
+    u8 dummy;
+                    
+    while(BIT_IS_SET(UCSR1A, RXC) ) {
+        UART1_ReceiveByte(&dummy);
+    }
+}
+
+void UART0_RX_InterruptEnable(void(* const ptrCallback)(void)) {    
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/
+    SET_BIT(UCSR0B, RXCIE);        /* Enable RX Complete Interrupt */
+    UART0_RX_Callback = ptrCallback;    /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART1_RX_InterruptEnable(void(* const ptrCallback)(void)) {    
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/
+    SET_BIT(UCSR1B, RXCIE);        /* Enable RX Complete Interrupt */
+    UART1_RX_Callback = ptrCallback;    /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART0_RX_InterruptDisable(void) {
+    CLR_BIT(UCSR0B, RXCIE);        /* Disable RX Complete Interrupt */
+}
+
+void UART1_RX_InterruptDisable(void) {
+    CLR_BIT(UCSR1B, RXCIE);        /* Disable RX Complete Interrupt */
+}
+
+void UART1_TX_InterruptEnable(void(* const ptrCallback)(void)) {
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/
+    SET_BIT(UCSR1B, TXCIE);        /* Enable TX Complete Interrupt */
+    UART1_TX_Callback = ptrCallback;    /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART0_TX_InterruptEnable(void(* const ptrCallback)(void)) {
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/
+    SET_BIT(UCSR0B, TXCIE);        /* Enable TX Complete Interrupt */
+    UART0_TX_Callback = ptrCallback;    /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART0_TX_InterruptDisable(void) {
+    CLR_BIT(UCSR0B, TXCIE);        /* Disable TX Complete Interrupt */
+}
+
+void UART1_TX_InterruptDisable(void) {
+    CLR_BIT(UCSR1B, TXCIE);        /* Disable TX Complete Interrupt */
+}
+
+void UART0_UDRE_InterruptEnable(void(* const ptrCallback)(void)) {
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/ 
+    SET_BIT(UCSR0B, UDRIE);        /* Enable UDRE Interrupt */
+    UART0_UDRE_Callback = ptrCallback;  /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART1_UDRE_InterruptEnable(void(* const ptrCallback)(void)) {
+    GIE_Disable();                      /* Disable global interrupt while configurating */
+
+    /*------------- Start of Configurations -------------*/ 
+    SET_BIT(UCSR1B, UDRIE);        /* Enable UDRE Interrupt */
+    UART1_UDRE_Callback = ptrCallback;  /* Set the callback function */
+    /*------------- End of Configurations ---------------*/
+
+    GIE_Enable();                       /* Re-enable global interrupt */
+}
+
+void UART0_UDRE_InterruptDisable(void) {
+
+    CLR_BIT(UCSR0B, UDRIE);        /* Disable UDRE Interrupt */
+}
+
+void UART1_UDRE_InterruptDisable(void) {
+    CLR_BIT(UCSR1B, UDRIE);        /* Disable UDRE Interrupt */
+}

@@ -1,0 +1,4 @@
+<map id="EXTI_Init" name="EXTI_Init">
+<area shape="rect" id="node1" title="Initialize an EXTI pin with a given sensitivity and callback function." alt="" coords="5,5,107,37"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="155,5,285,37"/>
+</map>

@@ -1,0 +1,9 @@
+Editors:
+	* VSCodeUserSetup-x64-1.57.1.exe
+
+Documentation:
+	* doxygen-1.9.1-setup.exe
+	* stable_windows_10_cmake_Release_x64_graphviz-install-2.48.0-win64
+	* basic-miktex-21.6-x64.exe
+	
+make-3.81.exe

@@ -1,0 +1,4 @@
+<map id="BUTTON_GetStatus" name="BUTTON_GetStatus">
+<area shape="rect" id="node1" title="Check whether a specific button is pressed or not." alt="" coords="5,5,204,37"/>
+<area shape="rect" id="node2" href="$_d_i_o_8h.html#abc3f5df321267f2d3aac283d866c6eea" title="Read the state of a pin." alt="" coords="252,5,395,37"/>
+</map>

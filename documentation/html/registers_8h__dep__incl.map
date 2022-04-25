@@ -1,0 +1,5 @@
+<map id="code/include/registers.h" name="code/include/registers.h">
+<area shape="rect" id="node1" title="Registers of ATmega328p MCU." alt="" coords="93,5,320,37"/>
+<area shape="rect" id="node2" href="$_s_p_i__cfg_8c.html" title="Configuration source file for SPI.c." alt="" coords="5,85,189,117"/>
+<area shape="rect" id="node3" href="$_u_a_r_t__cfg_8c.html" title="Configuration source file for UART.c." alt="" coords="214,85,421,117"/>
+</map>

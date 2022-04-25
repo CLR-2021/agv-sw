@@ -1,0 +1,9 @@
+<map id="PWM_Write" name="PWM_Write">
+<area shape="rect" id="node1" title=" " alt="" coords="280,145,404,177"/>
+<area shape="rect" id="node2" href="$_w_h_e_e_l_s_8h.html#a35a20edf71cda73c6b1c91802b841917" title="Brake the wheels." alt="" coords="35,5,202,37"/>
+<area shape="rect" id="node3" href="$_w_h_e_e_l_s_8h.html#a7ae5d70e384cf6952a3579064c484e14" title="Disables wheels and allows for free rolling." alt="" coords="35,61,202,93"/>
+<area shape="rect" id="node4" href="$_w_h_e_e_l_s_8h.html#a2a49433d3d8723c20d12e873391a6ffa" title="Turn the wheels to go backward." alt="" coords="5,117,232,149"/>
+<area shape="rect" id="node5" href="$_w_h_e_e_l_s_8h.html#a61e54169741b794159964d1ff5746339" title="Turn the wheels to go forward." alt="" coords="13,173,225,205"/>
+<area shape="rect" id="node6" href="$_w_h_e_e_l_s_8h.html#a778b8e28a81114786efed0e933e3d385" title="Turn the wheels to turn left." alt="" coords="25,229,212,261"/>
+<area shape="rect" id="node7" href="$_w_h_e_e_l_s_8h.html#a0d66cc28747601e3e28e735d8bd19f86" title="Turn the wheels to turn right." alt="" coords="19,285,219,317"/>
+</map>

@@ -1,0 +1,20 @@
+This isn't quite, um, accurate -- the interrupt assertion (trigger) is defined
+down to 1 timer tick (which could be one CPU cycle), and the overhead
+(cost to get to the ISR) is similarly well-defined. The interrupt, as with any
+interrupt, may have latency (time between trigger and ISR). Standard
+tricks:
+1) Use CTC if your MCU/timer have it.
+2) If you have to manually re-load the TCNT, do it by subtracting from
+the running TCNT value to correct for any interrupt latency.
+3) If your MCU really has nothing else to do, dedicate it to polling the
+TCNT or relevant Interrupt Flag.
+
+Since (1) or (2) don't help much with latency in the final overflow, you
+could mix the modes: Contrive the timer constants so as to do most of
+the timespan with overflows ((1)/(2)), then time the final segment using
+polling ((3)) for the remainder of the time, which can be made arbitrarily
+small.
+
+Of course, none of this gets you out of the business of counting cycles
+(watch out for 2+cycle instructions), but it can reduce the "interesting"
+sequences to a few small ones.

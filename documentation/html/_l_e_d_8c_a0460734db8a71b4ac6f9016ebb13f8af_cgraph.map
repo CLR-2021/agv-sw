@@ -1,0 +1,5 @@
+<map id="LED_Toggle" name="LED_Toggle">
+<area shape="rect" id="node1" title="Toggle state of a specific LED." alt="" coords="5,33,136,65"/>
+<area shape="rect" id="node2" href="$_d_i_o_8h.html#abc3f5df321267f2d3aac283d866c6eea" title="Read the state of a pin." alt="" coords="184,5,327,37"/>
+<area shape="rect" id="node3" href="$_d_i_o_8h.html#aa5beb6dce94cf5e0f46fdd912f17533b" title="write a value on the output pins, options are defined in STD_TYPES.h in the enum STATE_t" alt="" coords="186,61,325,93"/>
+</map>

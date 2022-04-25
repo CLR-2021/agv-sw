@@ -1,0 +1,4 @@
+<map id="LED_TurnOnOff" name="LED_TurnOnOff">
+<area shape="rect" id="node1" title="Turn on/off a specific LED." alt="" coords="5,5,168,37"/>
+<area shape="rect" id="node2" href="$_d_i_o_8h.html#aa5beb6dce94cf5e0f46fdd912f17533b" title="write a value on the output pins, options are defined in STD_TYPES.h in the enum STATE_t" alt="" coords="216,5,355,37"/>
+</map>

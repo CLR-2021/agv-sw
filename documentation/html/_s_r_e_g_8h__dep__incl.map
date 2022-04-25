@@ -1,0 +1,7 @@
+<map id="code/include/SREG.h" name="code/include/SREG.h">
+<area shape="rect" id="node1" title="Status Registers of ATmega328p MCU." alt="" coords="245,5,453,37"/>
+<area shape="rect" id="node2" href="$_e_x_t_i_8c.html" title="External Interrupts (EXTI) driver for Atmega128 microcontroller." alt="" coords="5,85,164,117"/>
+<area shape="rect" id="node3" href="$_g_i_e_8c.html" title="Global Interrupt Enable (GIE)" alt="" coords="189,85,338,117"/>
+<area shape="rect" id="node4" href="$_s_p_i_8c.html" title="SPI driver for ATMEGA128 microcontroller." alt="" coords="362,85,509,117"/>
+<area shape="rect" id="node5" href="$_t_i_m_e_r_8c.html" title="Timer driver for ATMEGA128 microcontroller." alt="" coords="533,85,709,117"/>
+</map>

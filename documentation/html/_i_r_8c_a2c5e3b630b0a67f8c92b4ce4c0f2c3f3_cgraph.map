@@ -1,0 +1,4 @@
+<map id="IR_GetStatus" name="IR_GetStatus">
+<area shape="rect" id="node1" title="Get status of a specific IR Sensor." alt="" coords="5,5,144,37"/>
+<area shape="rect" id="node2" href="$_d_i_o_8h.html#abc3f5df321267f2d3aac283d866c6eea" title="Read the state of a pin." alt="" coords="192,5,335,37"/>
+</map>

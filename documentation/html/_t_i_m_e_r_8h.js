@@ -1,0 +1,76 @@
+var _t_i_m_e_r_8h =
+[
+    [ "PWM_t", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1", [
+      [ "PWM_0", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1a857e21e20c27df92dec4574fcddfd740", null ],
+      [ "PWM_1", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1aea3b5b1dcb8647c430bc9391799f4703", null ],
+      [ "PWM_2", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1ab8296af41c4fdd6fd2dc62d6c761bdf6", null ],
+      [ "PWM_3", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1a44646d1313a5c911c1500447f531f542", null ],
+      [ "PWM_4", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1ae05454e483b89fa5573dc4846c991dfa", null ],
+      [ "PWM_5", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1af54add8e1985934150859253bb4f0bb5", null ],
+      [ "PWM_6", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1a7607a34c614aa9b3c5de02c81a13cc8f", null ],
+      [ "PWM_7", "_t_i_m_e_r_8h.html#a468cfdbb1d0bf69e6f4fde74f29c05f1aac2fcb9e05375605b3d8c9ed030327f8", null ]
+    ] ],
+    [ "TIMER_CLOCK_t", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500b", [
+      [ "NO_CLOCK", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba7cde15a9dcc26cb01ad473cdfb8e526c", null ],
+      [ "F_CPU_CLOCK", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba8a3b1ff270659d5951affd28bf436d84", null ],
+      [ "F_CPU_8", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500bac0cd58472d0a161dc569b1b3dcbb75d2", null ],
+      [ "F_CPU_32", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba81ed19e991e568d9b9e368adac0feb3d", null ],
+      [ "F_CPU_64", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500bab1d3cbae6653cd64639cf51e75da0502", null ],
+      [ "F_CPU_128", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba64a2bc87a8f604c636796e8f3521e76e", null ],
+      [ "F_CPU_256", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba643e14bd7531195e7f9f96cc6de54fd6", null ],
+      [ "F_CPU_1024", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba772605b8db9eb4bd49b8b5f73016116a", null ],
+      [ "F_CPU_EXT_CLK_FALLING", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba3eb675b8d0c990d3cf9c6ae2c6dcb942", null ],
+      [ "F_CPU_EXT_CLK_RISING", "_t_i_m_e_r_8h.html#a9c1f79f1149ce3804c6c7b6c2615500ba5b4eb6d8b5c939ab19e0b2bdad65117e", null ]
+    ] ],
+    [ "TIMER_MODE_t", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7", [
+      [ "TIMER_MODE_NORMAL", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a6a1047d7d57a907cc491fc1efeaeb7d1", null ],
+      [ "TIMER_MODE_CTC", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7ae51c2b259e0b5da6909ed955d7527c10", null ],
+      [ "TIMER_MODE_CTC_OCR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a613f82bfcbe0ea4ef8db99603f4001ac", null ],
+      [ "TIMER_MODE_CTC_ICR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a7bcb260d99fd5f64615f720992d3733e", null ],
+      [ "TIMER_MODE_FAST_PWM", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7ae39b6fee84aef455cc1b3c228f3b64bb", null ],
+      [ "TIMER_MODE_FAST_PWM_8", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a2215c76efb52c86f03c4d34fbef633fb", null ],
+      [ "TIMER_MODE_FAST_PWM_9", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7ad426feedd5dff01c2490d1d67e8ea6bc", null ],
+      [ "TIMER_MODE_FAST_PWM_10", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a57482216c6517b904616530d300d7198", null ],
+      [ "TIMER_MODE_FAST_PWM_ICR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a28775252a63403f480ab39a815511bb2", null ],
+      [ "TIMER_MODE_FAST_PWM_OCR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a03aad11c00bb1ba305376a37a612b1d6", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7ad2107c201a74fb8ba07717dec91d8e62", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM_8", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a3661e572df319d3f75ad8d925fc0cc9c", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM_9", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a6797664c50ab9bda126e3a05014e0450", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM_10", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a8e5777d2f8d5d862e9888dd56e15f5a9", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM_ICR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a2778b589e71216225b39936d4c8f7b81", null ],
+      [ "TIMER_MODE_PHASE_CORRECT_PWM_OCR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7acfa60ea36ba1cbb88c4385bd3cba91ae", null ],
+      [ "TIMER_MODE_PHASE_FREQ_CORRECT_ICR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7a5516d139d360d88db0822e2d8921f6c2", null ],
+      [ "TIMER_MODE_PHASE_FREQ_CORRECT_OCR", "_t_i_m_e_r_8h.html#ac8f174de48c27cedd687422e09c579a7ab570a7ed4e5b597c892032182d0f13bf", null ]
+    ] ],
+    [ "TIMER_OC_t", "_t_i_m_e_r_8h.html#aa5983824df7ee200559d65a35f9205c5", [
+      [ "NO_OC", "_t_i_m_e_r_8h.html#aa5983824df7ee200559d65a35f9205c5aba4633bd8372f389cfca224f098e8b23", null ],
+      [ "TOGGLE_OC", "_t_i_m_e_r_8h.html#aa5983824df7ee200559d65a35f9205c5a1e4a50c7a2ffc291c2165b6250d47109", null ],
+      [ "CLEAR_OC", "_t_i_m_e_r_8h.html#aa5983824df7ee200559d65a35f9205c5a1a64edd993e9c86beb8ed41d49899743", null ],
+      [ "SET_OC", "_t_i_m_e_r_8h.html#aa5983824df7ee200559d65a35f9205c5ab5b8514169cfed4d4de6b0313ff1e6ba", null ]
+    ] ],
+    [ "TIMER_OCx_t", "_t_i_m_e_r_8h.html#a6d540165db3a52c22119a610a755a3e1", [
+      [ "TIMER_OCA", "_t_i_m_e_r_8h.html#a6d540165db3a52c22119a610a755a3e1a0e6a12b4942ec56808395f1542b4edea", null ],
+      [ "TIMER_OCB", "_t_i_m_e_r_8h.html#a6d540165db3a52c22119a610a755a3e1a24945903db7fd7dfbe1d6644c436a498", null ],
+      [ "TIMER_OCC", "_t_i_m_e_r_8h.html#a6d540165db3a52c22119a610a755a3e1a1927b0d0a66815802a9410234dadb703", null ]
+    ] ],
+    [ "PWM_Init", "_t_i_m_e_r_8h.html#abcbf96f0c1b9f36393b7934baf38a0a7", null ],
+    [ "PWM_Write", "_t_i_m_e_r_8h.html#a1558aa9685d2bae3f08d5eec4de9d294", null ],
+    [ "TIMER0_DisableCompareMatchInterrupt", "_t_i_m_e_r_8h.html#ad8ea6821919cab55a0ac5181f8cef901", null ],
+    [ "TIMER0_DisableOverflowInterrupt", "_t_i_m_e_r_8h.html#a6b7779eb1ef0c9588e3f35bee022eb22", null ],
+    [ "TIMER0_EnableCompareMatchInterrupt", "_t_i_m_e_r_8h.html#abcf7cb3f7f90ee395ef9b2bf504dd08d", null ],
+    [ "TIMER0_EnableOverflowInterrupt", "_t_i_m_e_r_8h.html#a33086b46cfaae0bbb0271b80897dd9ed", null ],
+    [ "TIMER0_GetTimerValue", "_t_i_m_e_r_8h.html#a32d14e2f5ac6ff5fd347b89ffd45aaa2", null ],
+    [ "TIMER0_Init", "_t_i_m_e_r_8h.html#a8257d97048d8a0b0d912136ffb935aa1", null ],
+    [ "TIMER0_SetCompareValue", "_t_i_m_e_r_8h.html#aac4883db900865fbda1e629f0ecd8e2c", null ],
+    [ "TIMER0_SetTimer", "_t_i_m_e_r_8h.html#a51544b7ed25c344efd276d9304f2b539", null ],
+    [ "TIMER1_DisableCaptureInterrupt", "_t_i_m_e_r_8h.html#a23b86df4d3097ad43c0dfcd39c8955fe", null ],
+    [ "TIMER1_DisableCompareMatchInterrupt", "_t_i_m_e_r_8h.html#a717334319815e085f75b7ccbd006560d", null ],
+    [ "TIMER1_DisableOverflowInterrupt", "_t_i_m_e_r_8h.html#a2595283b9fa2dccae88e4d1d2a31bc8c", null ],
+    [ "TIMER1_EnableCaptureInterrupt", "_t_i_m_e_r_8h.html#a8c0b82c74d5775d6639dcde3f49a0551", null ],
+    [ "TIMER1_EnableCompareMatchInterrupt", "_t_i_m_e_r_8h.html#ae3167decdea68787f29fd940ff88e867", null ],
+    [ "TIMER1_EnableOverflowInterrupt", "_t_i_m_e_r_8h.html#a723c6d22d40adb0570288ca581299479", null ],
+    [ "TIMER1_GetTimerValue", "_t_i_m_e_r_8h.html#abdd1e6da475c9161581da1cc31e7adec", null ],
+    [ "TIMER1_Init", "_t_i_m_e_r_8h.html#a16c2e0bcfaf6276ada1336f2e0e8f126", null ],
+    [ "TIMER1_SetCompareValue", "_t_i_m_e_r_8h.html#a56e991bc03df64696e42afd38e47dd69", null ],
+    [ "TIMER1_SetTimer", "_t_i_m_e_r_8h.html#ad143e7d82f80e84d93d47c583649b076", null ]
+];

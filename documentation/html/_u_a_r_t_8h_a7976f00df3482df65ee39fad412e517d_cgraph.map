@@ -1,0 +1,4 @@
+<map id="UART0_UDRE_InterruptEnable" name="UART0_UDRE_InterruptEnable">
+<area shape="rect" id="node1" title="Enable the interrupt of Data Register Empty of UART module 0 with passing the function pointer to the..." alt="" coords="5,5,300,37"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="348,5,479,37"/>
+</map>

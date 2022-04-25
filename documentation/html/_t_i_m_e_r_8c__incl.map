@@ -1,0 +1,9 @@
+<map id="code/src/TIMER.c" name="code/src/TIMER.c">
+<area shape="rect" id="node1" title="Timer driver for ATMEGA128 microcontroller." alt="" coords="391,5,567,37"/>
+<area shape="rect" id="node2" href="$_s_t_d___t_y_p_e_s_8h.html" title="Standard data types For AVR Microcontrollers." alt="" coords="5,85,157,117"/>
+<area shape="rect" id="node3" href="$_b_i_t___m_a_t_h_8h.html" title="Common bit manipulation operations." alt="" coords="182,85,317,117"/>
+<area shape="rect" id="node4" href="$_t_i_m_e_r__reg_8h.html" title="Registers of Timers of ATmega328p MCU." alt="" coords="341,85,478,117"/>
+<area shape="rect" id="node5" href="$_s_r_e_g_8h.html" title="Status Registers of ATmega328p MCU." alt="" coords="503,85,596,117"/>
+<area shape="rect" id="node6" href="$_g_i_e_8h.html" title="Interfaces header file for GIE.c." alt="" coords="621,85,691,117"/>
+<area shape="rect" id="node7" href="$_t_i_m_e_r_8h.html" title="Interfaces header file for TIMER.c." alt="" coords="716,85,815,117"/>
+</map>

@@ -1,0 +1,49 @@
+Description:
+	It is specially designed to work great with coreless motors. 
+	Supports forward & reverse motor control and PWM speed control. 
+	Good choice for ordinary DC motor and coreless motor, etc.
+
+Features:
+	The upgraded version comes with:
+		* Heat sink to improve the reliability. 
+		* Current detection circuit to realize a perfect PID closed-loop design.
+	High-speed switch. General coreless motors need 60kHz PWM frequency and this board is designed with a 200kHz switch.
+	Withstand high current overload and has brake function which can stop motor quickly.
+	Single power source input voltage (5-12 V/DC) (14.6V Max.).
+	Quiescent Current: <30mA±5mA
+	
+Specification:
+    • Model: DBH-1A
+    • Rated Voltage: 5-12 V/DC (14.6V Max.)
+    • Quiescent Current: <30mA±5mA
+    • Operation Current: OA-30A per channel Max.
+	 
+Recommended Frequency:
+	1. Normal motor: 16 KHZ
+	2. Coreless motor: 80 KHZ
+	3. Semi-conductor Refrigeration: 5o0hz~80kHz
+   
+Input Voltage Level:
+    • Lower Voltage Level: 0 to 5V
+    • Higher Voltage Level: 2.5-13 V (board is compatible with typical 3.3 V, 5 V, 12 V)
+	* PWR+ voltage range: 3V to 13.5V
+	* Internal voltage, Vcc, is powered from PWR+ and is regulated at 13.75V
+	
+NOTES:
+    • Input PWM duty cycle cannot be more than 98%, or the board won't work stably or even be damaged.
+    • Select PWM frequency according to load type, please use recommended frequency.
+	* I connected this driver similarly to the driver L298N.
+		IN 1, IN 2 - set the direction of rotation.
+		EN - To adjust the speed of the motors.
+		GND - ' - '
+		V + '+ 5 volts'
+	* ATTENTION if you have connected the power to PWR more than 5 volts (to power the motors), "V +" DO NOT CONNECT TO ARDUINO, (otherwise arduino will burn).
+	* PWR+ has an acceptable voltage range of 3V to 13.5V. 
+	* PWR+ is applied directly to V+, So, if your motor voltage is 5V, you can use it to power your controller. If not, your controller won’t work, or be damaged.
+	* EN > 3V or left open enables drive: The two enables, ENA and ENB, if left disconnected, default to enabled high with 10K pull-ups to Vcc. If you need to control them, the IR2104S shutdown inputs enable at 3V rising and 0.8V falling.
+	* Output current monitor, CT, gain is 155mV/A
+	* The control inputs (IN1 ... IN4, ENA, ENB) on the 12pin header can all operate from 0V to 12V. They have different characteristics though.
+	* The four inputs, IN1A, IN2A, IN1B, and IN2B, have 10K pull-downs, and 1.25V thresholds. With this, they are 3.3V, 5V, and 12V logic compatible, as long as low is less than the threshold.
+
+	* The only complicating issue is the timing of the IR2104S half-bridge drivers. It’s unfortunate the designer chose a 600V device for such a low voltage application. The high-side gate drivers are supplied by their respective boot-strap capacitors; C5, C6, C12, and C13. They are charged through their respective boot-strap diodes. The half-bridge output has to go low for at least 1uS for this to happen. Also, this needs to happen each cycle before the capacitor voltage drops below 10V. This means this motor drive has a minimum operating frequency and will not hold a DC output, like when the stepper motor needs to hold its position.
+	

@@ -1,0 +1,4 @@
+<map id="UART1_TX_InterruptEnable" name="UART1_TX_InterruptEnable">
+<area shape="rect" id="node1" title="Enable the transmit interrupt of UART module 0 with passing the function pointer to the interrupt ser..." alt="" coords="5,5,271,37"/>
+<area shape="rect" id="node2" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="319,5,449,37"/>
+</map>

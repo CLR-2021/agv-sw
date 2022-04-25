@@ -1,0 +1,9 @@
+<map id="code/src/LIFTER.c" name="code/src/LIFTER.c">
+<area shape="rect" id="node1" title="Lifter module that control the movement of the lifter actuator." alt="" coords="357,5,539,37"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,85,120,117"/>
+<area shape="rect" id="node3" href="$_b_i_t___m_a_t_h_8h.html" title="Common bit manipulation operations." alt="" coords="145,85,279,117"/>
+<area shape="rect" id="node4" href="$_s_t_d___t_y_p_e_s_8h.html" title="Standard data types For AVR Microcontrollers." alt="" coords="304,85,456,117"/>
+<area shape="rect" id="node5" href="$_d_i_o_8h.html" title=" " alt="" coords="480,85,552,117"/>
+<area shape="rect" id="node6" href="$_l_i_f_t_e_r_8h.html" title="Interfaces header file for LIFTER.c." alt="" coords="577,85,682,117"/>
+<area shape="rect" id="node7" href="$_l_i_f_t_e_r__cfg_8h.html" title="Configuration header file for LIFTER.c." alt="" coords="706,85,849,117"/>
+</map>

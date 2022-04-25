@@ -1,0 +1,12 @@
+<map id="code/src/NRF24.c" name="code/src/NRF24.c">
+<area shape="rect" id="node1" title="NRF24 wireless transceiver module driver." alt="" coords="589,5,768,37"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,85,120,117"/>
+<area shape="rect" id="node3" href="$_s_t_d___t_y_p_e_s_8h.html" title="Standard data types For AVR Microcontrollers." alt="" coords="144,85,296,117"/>
+<area shape="rect" id="node4" href="$_b_i_t___m_a_t_h_8h.html" title="Common bit manipulation operations." alt="" coords="321,85,455,117"/>
+<area shape="rect" id="node5" href="$_n_r_f24__reg_8h.html" title="Registers of NRF24L01 wireless transceiver module." alt="" coords="480,85,619,117"/>
+<area shape="rect" id="node6" href="$_d_i_o_8h.html" title=" " alt="" coords="643,85,715,117"/>
+<area shape="rect" id="node7" href="$_g_i_e_8h.html" title="Interfaces header file for GIE.c." alt="" coords="739,85,810,117"/>
+<area shape="rect" id="node8" href="$_s_p_i_8h.html" title="Interfaces header file for SPI.c." alt="" coords="835,85,904,117"/>
+<area shape="rect" id="node9" href="$_n_r_f24_8h.html" title="Interfaces header file for NRF24.c." alt="" coords="929,85,1029,117"/>
+<area shape="rect" id="node10" href="$_n_r_f24__cfg_8h.html" title="Configuration header file for NRF24.c." alt="" coords="1053,85,1190,117"/>
+</map>

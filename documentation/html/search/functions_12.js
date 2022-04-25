@@ -1,0 +1,15 @@
+var searchData=
+[
+  ['waitforclientpickup_1330',['waitForClientPickup',['../app_8h.html#ace26c1e63eda3a71aeebbcdb2b377dab',1,'app.h']]],
+  ['wheels_5fbrake_1331',['WHEELS_Brake',['../_w_h_e_e_l_s_8h.html#a35a20edf71cda73c6b1c91802b841917',1,'WHEELS_Brake(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a35a20edf71cda73c6b1c91802b841917',1,'WHEELS_Brake(void):&#160;WHEELS.c']]],
+  ['wheels_5fcoast_1332',['WHEELS_Coast',['../_w_h_e_e_l_s_8h.html#a7ae5d70e384cf6952a3579064c484e14',1,'WHEELS_Coast(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a7ae5d70e384cf6952a3579064c484e14',1,'WHEELS_Coast(void):&#160;WHEELS.c']]],
+  ['wheels_5fgetcurrentconsumption_1333',['WHEELS_GetCurrentConsumption',['../_w_h_e_e_l_s_8h.html#a18753e9a2f103c2fea10cab636689a54',1,'WHEELS.h']]],
+  ['wheels_5fgetwheelsposition_1334',['WHEELS_GetWheelsPosition',['../_w_h_e_e_l_s_8h.html#acb1585e08ae15acdcf2c8e98e9fe254b',1,'WHEELS_GetWheelsPosition(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#acb1585e08ae15acdcf2c8e98e9fe254b',1,'WHEELS_GetWheelsPosition(void):&#160;WHEELS.c']]],
+  ['wheels_5fgobackward_1335',['WHEELS_GoBackward',['../_w_h_e_e_l_s_8h.html#a2a49433d3d8723c20d12e873391a6ffa',1,'WHEELS_GoBackward(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a2a49433d3d8723c20d12e873391a6ffa',1,'WHEELS_GoBackward(void):&#160;WHEELS.c']]],
+  ['wheels_5fgoforward_1336',['WHEELS_GoForward',['../_w_h_e_e_l_s_8h.html#a61e54169741b794159964d1ff5746339',1,'WHEELS_GoForward(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a61e54169741b794159964d1ff5746339',1,'WHEELS_GoForward(void):&#160;WHEELS.c']]],
+  ['wheels_5finit_1337',['WHEELS_Init',['../_w_h_e_e_l_s_8h.html#a6fbd85dc1cb97230f71d5f6afb91d106',1,'WHEELS_Init(void):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a6fbd85dc1cb97230f71d5f6afb91d106',1,'WHEELS_Init(void):&#160;WHEELS.c']]],
+  ['wheels_5fsetspeed_1338',['WHEELS_SetSpeed',['../_w_h_e_e_l_s_8h.html#a45c7736d851d4d1acef9b2c72c74b092',1,'WHEELS_SetSpeed(u8 Speed):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a76471a8b90201e24bad0f9dafc909963',1,'WHEELS_SetSpeed(const u8 Speed):&#160;WHEELS.c']]],
+  ['wheels_5fsetwheelsposition_1339',['WHEELS_SetWheelsPosition',['../_w_h_e_e_l_s_8h.html#ab43ce600c8bdb61cc1734af420c81e8f',1,'WHEELS_SetWheelsPosition(WHEELS_POSITION_t wheelsPositions):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a9bbde23e5bc40a769d57bd026da3b4a4',1,'WHEELS_SetWheelsPosition(const WHEELS_POSITION_t wheelsPositions):&#160;WHEELS.c']]],
+  ['wheels_5fturnleft_1340',['WHEELS_TurnLeft',['../_w_h_e_e_l_s_8h.html#a778b8e28a81114786efed0e933e3d385',1,'WHEELS_TurnLeft(WHEELS_TURN_t smoothOrSharp):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a691ce4a1398576334bdcd81585254ebe',1,'WHEELS_TurnLeft(const WHEELS_TURN_t smoothOrSharp):&#160;WHEELS.c']]],
+  ['wheels_5fturnright_1341',['WHEELS_TurnRight',['../_w_h_e_e_l_s_8h.html#a0d66cc28747601e3e28e735d8bd19f86',1,'WHEELS_TurnRight(WHEELS_TURN_t smoothOrSharp):&#160;WHEELS.c'],['../_w_h_e_e_l_s_8c.html#a21788689753cdf59f8729d2b3541bcb2',1,'WHEELS_TurnRight(const WHEELS_TURN_t smoothOrSharp):&#160;WHEELS.c']]]
+];

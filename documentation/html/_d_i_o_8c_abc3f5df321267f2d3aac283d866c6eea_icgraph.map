@@ -1,0 +1,7 @@
+<map id="DIO_ReadPin" name="DIO_ReadPin">
+<area shape="rect" id="node1" title="Read the state of a pin." alt="" coords="419,61,561,93"/>
+<area shape="rect" id="node2" href="$_b_u_t_t_o_n_8h.html#abc358853475ef41c39577e472b527580" title="Check whether a specific button is pressed or not." alt="" coords="172,5,371,37"/>
+<area shape="rect" id="node3" href="$_i_r_8h.html#a2c5e3b630b0a67f8c92b4ce4c0f2c3f3" title="Get status of a specific IR Sensor." alt="" coords="202,61,341,93"/>
+<area shape="rect" id="node5" href="$_l_e_d_8h.html#afd862715c59f5e155bf608d18e01de1e" title="Toggle state of a specific LED." alt="" coords="206,117,337,149"/>
+<area shape="rect" id="node4" href="$_i_r_8h.html#a6d42a133df20705517bb6bbf22b6f63b" title="Scan all IR Sensors and return the status of all of them." alt="" coords="5,61,124,93"/>
+</map>

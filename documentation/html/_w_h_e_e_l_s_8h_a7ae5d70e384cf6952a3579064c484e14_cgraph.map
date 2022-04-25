@@ -1,0 +1,7 @@
+<map id="WHEELS_Coast" name="WHEELS_Coast">
+<area shape="rect" id="node1" title="Disables wheels and allows for free rolling." alt="" coords="5,33,172,65"/>
+<area shape="rect" id="node2" href="$_t_i_m_e_r_8h.html#a1558aa9685d2bae3f08d5eec4de9d294" title=" " alt="" coords="220,33,344,65"/>
+<area shape="rect" id="node3" href="$_t_i_m_e_r_8c.html#aac4883db900865fbda1e629f0ecd8e2c" title=" " alt="" coords="392,5,655,37"/>
+<area shape="rect" id="node4" href="$_t_i_m_e_r_8c.html#a56e991bc03df64696e42afd38e47dd69" title=" " alt="" coords="392,61,655,93"/>
+<area shape="rect" id="node5" href="$_g_i_e_8h.html#ac00cc2e43d0aa97f29ad379d2dbc63c7" title="Global Interrupt Disable (GID)" alt="" coords="703,61,833,93"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="code/src/WHEELS.c" name="code/src/WHEELS.c">
+<area shape="rect" id="node1" title="This is the source file for the WHEELS module based on the WHEELS module." alt="" coords="333,5,531,37"/>
+<area shape="rect" id="node2" href="$_s_t_d___t_y_p_e_s_8h.html" title="Standard data types For AVR Microcontrollers." alt="" coords="5,85,157,117"/>
+<area shape="rect" id="node3" href="$_b_i_t___m_a_t_h_8h.html" title="Common bit manipulation operations." alt="" coords="182,85,317,117"/>
+<area shape="rect" id="node4" href="$_d_i_o_8h.html" title=" " alt="" coords="341,85,413,117"/>
+<area shape="rect" id="node5" href="$_t_i_m_e_r_8h.html" title="Interfaces header file for TIMER.c." alt="" coords="437,85,536,117"/>
+<area shape="rect" id="node6" href="$_w_h_e_e_l_s_8h.html" title="Interfaces header file for WHEELS.c." alt="" coords="560,85,680,117"/>
+<area shape="rect" id="node7" href="$_w_h_e_e_l_s__cfg_8h.html" title="Configuration header file for WHEELS.c." alt="" coords="704,85,861,117"/>
+</map>
